@@ -162,109 +162,17 @@ def plot_learning_curve(classifier, X_train, y_train):
     plt.legend(loc='lower right')
     plt.show()
 
-# create a function to plot the validation curve
-def plot_validation_curve(classifier, X_train, y_train):
-    param_range = np.arange(1, 100, 1)
-    train_scores, test_scores = validation_curve(estimator=classifier, X=X_train, y=y_train, param_name='n_estimators', param_range=param_range, cv=10, n_jobs=-1)
-    train_mean = np.mean(train_scores, axis=1)
-    train_std = np.std(train_scores, axis=1)
-    test_mean = np.mean(test_scores, axis=1)
-    test_std = np.std(test_scores, axis=1)
-    plt.figure(figsize=(24, 16))
-    plt.plot(param_range, train_mean, color='red', marker='o', markersize=5, label='Training Accuracy')
-    plt.fill_between(param_range, train_mean + train_std, train_mean - train_std, alpha=0.15, color='red')
-    plt.plot(param_range, test_mean, color='blue', marker='o', markersize=5, label='Validation Accuracy')
-    plt.fill_between(param_range, test_mean + test_std, test_mean - test_std, alpha=0.15, color='blue')
-    plt.title('Validation Curve')
-    plt.xlabel('Number of Estimators')
-    plt.ylabel('Accuracy')
-    plt.legend(loc='lower right')
-    plt.show()
-
-# create a function to plot the decision boundary
-def plot_decision_boundary(classifier, X_train, y_train):
-    X_set, y_set = X_train, y_train
-    X1, X2 = np.meshgrid(np.arange(start=X_set[:, 0].min() - 1, stop=X_set[:, 0].max() + 1, step=0.01), 
-                         np.arange(start=X_set[:, 1].min() - 1, stop=X_set[:, 1].max() + 1, step=0.01))
-    plt.figure(figsize=(24, 16))
-    plt.contourf(X1, X2, classifier.predict(np.array([X1.ravel(), X2.ravel()]).T).reshape(X1.shape), 
-                 alpha=0.75, cmap=ListedColormap(('red', 'blue')))
-    plt.xlim(X1.min(), X1.max())
-    plt.ylim(X2.min(), X2.max())
-    for i, j in enumerate(np.unique(y_set)):
-        plt.scatter(X_set[y_set==j, 0], X_set[y_set==j, 1], c=ListedColormap(('red', 'blue'))(i), label=j)
-    plt.title('Decision Boundary')
-    plt.xlabel('X1')
-    plt.ylabel('X2')
-    plt.legend()
-    plt.show()
-
-
-# print the accuracy
-print('Accuracy: %.2f%%' % (accuracy * 100))
-
-# print the confusion matrix
-print('Confusion Matrix:')
-print(confusion_matrix)
-
-# print the classification report
-print('Classification Report:')
-print(classification_report)
-
-# plot the confusion matrix
-plot_confusion_matrix(confusion_matrix)
-
-# plot the classification report
-plot_classification_report(classification_report)
-
-# plot the ROC curve
-plot_roc_curve(fpr, tpr, auc)
-
-# plot the precision-recall curve
-plot_precision_recall_curve(precision, recall, average_precision)
-
-# plot the learning curve
-plot_learning_curve(classifier, X_train, y_train)
-
-# plot the validation curve
-plot_validation_curve(classifier, X_train, y_train)
-
-# plot the decision boundary
-plot_decision_boundary(classifier, X_train, y_train)
-
-# print the best parameters
-print('Best Parameters:')
-print(grid_search.best_params_)
-
-# print the best score
-print('Best Score: %.2f%%' % (grid_search.best_score_ * 100))
-
-# print the best estimator
-print('Best Estimator:')
-print(grid_search.best_estimator_)
-
-# print the best index
-print('Best Index:')
-print(grid_search.best_index_)
+# create a function to plot the decision tree
 
 
 
-#use the data to create a relationship matrix between the US and a nation
-# plot the relationship matrix
-plot_relationship_matrix(relationship_matrix)
+# create a function to plot the random forest
 
+# create a function to plot the feature importance
 
+# create a function to plot the partial dependence plot
 
+# create a function to plot the SHAP values
 
- #use the data to adjust relationship of the rest of the nations based on the relationship matrix
-plot = plot_relationship_matrix(relationship_matrix)
-plot.show()
-
-
-
-
-
-
-
-
+# create a function to plot the permutation importance
 

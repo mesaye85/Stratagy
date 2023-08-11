@@ -256,11 +256,12 @@ plot_relationship_matrix(relationship_matrix)
 
 
 
- #use the data to adjust relationship of the rest of the nations based on the relationship matrix
-plot = plot_relationship_matrix(relationship_matrix)
-plot.show()
 
 
+    #create a matrix of the relationship between the US and a nation
+    #use the data to adjust relationsips of the rest of the nations based on the relationship matrix
+
+#use the data  to adjust relationsips of the rest of the nations based on the relationship matrix
 
 
 
