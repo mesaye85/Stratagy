@@ -1,0 +1,197 @@
+Country,Gini,GDP,Country,Military ,"Country, Relations",Country,Democracy
+,Albania,0.27010342,0.722222,Afghanistan,3.3736,"Afghanistan,0",Afghanistan,0.358
+,Algeria,0.317389798,2.883673,Albania,3.0023,"Albania,0.5",Albania,0.583
+,Angola,0.305956557,2.429913969,Algeria,0.4724,"Algeria,0.3",Algeria,0.319
+,Argentina - urban,0.299846704,1.613787817,Angola,1.0931,"Andorra,0.4",Angola,0.387
+,Armenia,0.289604846,5.038076699,Argentina,0.6091,"Angola,0.2",Argentina,0.763
+,Australia,0.345988965,3.262680616,Armenia,2.3169,"Antigua and Barbuda,0.4",Armenia,0.639
+,Austria,0.327537318,2.087819943,Australia,0.2377,"Argentina,0.4",Australia,0.904
+,Azerbaijan,0.337362987,5.155063865,Austria,0.8924,"Armenia,0.2",Austria,0.89
+,Bangladesh,0.330556627,3.321640852,Azerbaijan,1.0251,"Australia,0.7",Azerbaijan,0.136
+,Belarus,0.301482817,2.912797507,Bahrain,2.3269,"Austria,0.5",Bangladesh,0.215
+,Belgium,0.30771739,1.815057817,Bangladesh,0.6851,"Azerbaijan,0.3",Barbados,0.83
+,Belize,0.401949092,4.348701327,Belarus,0.8124,"The Bahamas,0.5",Belarus,0.139
+,Benin,0.353300543,1.709644692,Belgium,1.1451,"Bahrain,0.4",Belgium,0.925
+,Bhutan,0.276157309,3.618641645,Bhutan,35.8958,"Bangladesh,0.3",Benin,0.503
+,Bolivia,0.519568925,5.366373807,Bolivia,1.5708,"Barbados,0.4",Bhutan,0.701
+,Bolivia - urban,0.42715515,1.123982024,Bosnia and Herzegovina,4.0288,"Belarus,-0.2",Bolivia,0.521
+,Bosnia and Herzegovina,0.512721112,2.106653641,Botswana,2.6008,"Belgium,0.5",Bosnia and Herzegovina,0.531
+,Botswana,0.408308605,1.781027843,Brazil,0.1695,"Belize,0.4",Botswana,0.719
+,Brazil,0.42808887,4.766555082,Bulgaria,1.1071,"Benin,0.3",Brazil,0.599
+,Bulgaria,0.452763661,4.169207737,Burkina Faso,4.7216,"Bhutan,0.2",Bulgaria,0.672
+,Burkina Faso,0.467617391,6.23973654,Cambodia,2.3944,"Bolivia,0.2",Burkina Faso,0.643
+,Burundi,0.45468093,2.930950658,Cameroon,2.5771,"Bosnia and Herzegovina,0.4",Burma/Myanmar,0.542
+,Cameroon,0.448562859,6.304244653,Canada,0.3601,"Botswana,0.4",Burundi,0.125
+,Canada,0.459168036,4.828918469,Central African Republic,5.2184,"Brazil,0.5",Cambodia,0.178
+,Cape Verde,0.489044033,2.242320086,Chad,1.9638,"Brunei,0.3",Cameroon,0.286
+,Central African Republic,0.495244294,1.281710098,Chile,0.8169,"Bulgaria,0.5",Canada,0.86
+,Chad,0.491104752,0.918959676,China,0.0511,"Burkina Faso,0.3",Cape Verde,0.792
+,Chile,0.507336438,5.017177371,Colombia,0.6438,"Burundi,0.2",Central African Republic,0.349
+,China,0.497920414,1.281710098,Croatia,0.9962,"Cabo Verde,0.4",Chad,0.211
+,China - rural,0.510639577,0.918959676,Cuba,1.2246,"Cambodia,0.1",Chile,0.84
+,China - urban,0.53343106,5.017177371,Czechia,0.6161,"Cameroon,0.3",China,0.048
+,Colombia,0.537937583,2.461657881,Democratic Republic of the Congo,1.4171,"Canada,0.7",Colombia,0.566
+,Colombia - urban,0.50897157,4.953417863,Denmark,0.8677,"Central African Republic,0.2",Comoros,0.372
+,Comoros,0.483770346,6.479367406,Dominican Republic,3.5349,"Chad,0.3","Congo, Democratic Republic",0.337
+,Congo,0.477073551,2.902934842,Ecuador,1.1235,"Chile,0.5","Congo, Republic",0.266
+,Costa Rica,0.4634608,2.293807906,Egypt,0.1869,"China,-0.3",Costa Rica,0.914
+,Cote d'Ivoire,0.461735563,1.537952561,El Salvador,4.3558,"Colombia,0.6",Côte d'Ivoire,0.431
+,Croatia,0.448767903,4.76759731,Eritrea,4.1541,"Comoros,0.2",Croatia,0.763
+,Cyprus,0.436541971,4.029009804,Estonia,2.6527,"Congo Democratic Republic of the,0.2",Cuba,0.165
+,Czechia,0.435832183,8.388547565,Ethiopia,1.0798,"Congo Republic of the,0.3",Cyprus,0.846
+,Democratic Republic of Congo,0.426452806,3.379761019,Finland,0.9019,"Costa Rica,0.5",Czech Republic,0.834
+,Denmark,0.413261979,2.632692382,France,0.1283,"Côte d’Ivoire,0.4",Denmark,0.958
+,Djibouti,0.409454422,2.287996429,Gabon,4.7871,"Croatia,0.5",Djibouti,0.291
+,Dominican Republic,0.416327899,2.983541549,Georgia,2.0014,"Cuba,-0.2",Dominican Republic,0.562
+,East Timor,0.420325289,3.996026851,Germany,0.2322,"Cyprus,0.4",Ecuador,0.601
+,Ecuador,0.411344884,2.354309579,Ghana,2.3098,"Czech Republic,0.5",Egypt,0.21
+,Ecuador - urban,0.413424984,3.734389955,Greece,0.4506,"Denmark,0.6",El Salvador,0.485
+,Egypt,0.429058504,2.282950744,Guatemala,2.2421,"Djibouti,0.3",Equatorial Guinea,0.117
+,El Salvador,0.423432911,3.247049891,Honduras,2.6558,"Dominica,0.4",Eritrea,0.017
+,Estonia,0.44418623,1.753477127,Hungary,0.8633,"Dominican Republic,0.4",Estonia,0.903
+,Eswatini,0.362197243,2.887924577,India,0.0979,"East Timor (Timor-Leste),0.3",Eswatini,0.239
+,Ethiopia,0.35364359,2.160073041,Indonesia,0.2251,"Ecuador,0.3",Ethiopia,0.351
+,Ethiopia - rural,0.347796743,4.543493324,Iran,0.2104,"Egypt,0.4",Fiji,0.537
+,Fiji,0.330280869,2.607706324,Iraq,0.5597,"El Salvador,0.4",Finland,0.946
+,Finland,0.375056325,4.558588161,Ireland,2.3147,"Equatorial Guinea,0.2",France,0.889
+,France,0.359923534,2.207399931,Israel,0.2621,"Eritrea,-0.3",Gabon,0.443
+,Gabon,0.297099848,12.47724002,Italy,0.1801,"Estonia,0.5",Georgia,0.716
+,Gambia,0.312260583,3.364190711,Ivory Coast,2.7392,"Eswatini,0.3",Germany,0.944
+,Georgia,0.291881417,3.459997876,Japan,0.1195,"Ethiopia,0.3",Ghana,0.682
+,Germany,0.280158774,3.610576593,Jordan,1.3989,"Fiji,0.3",Greece,0.834
+,Ghana,0.299925823,6.085367246,Kazakhstan,1.0615,"Finland,0.5",Guatemala,0.504
+,Greece,0.293529458,2.412593222,Kenya,1.5252,"France,0.6",Guinea,0.275
+,Guatemala,0.296022614,1.848514016,Kosovo,13.9136,"Gabon,0.3",Guinea-Bissau,0.492
+,Guinea,0.305796632,1.663828209,Kuwait,1.2988,"The Gambia,0.3",Guyana,0.605
+,Guinea-Bissau,0.314832907,2.272202754,Kyrgyzstan,2.2011,"Georgia,0.4",Haiti,0.346
+,Guyana,0.323567718,3.346723885,Laos,3.6906,"Germany,0.6",Honduras,0.379
+,Haiti,0.325479484,1.93861017,Latvia,2.2758,"Ghana,0.4",Hong Kong,0.464
+,Honduras,0.336218374,1.606698572,Lebanon,2.8681,"Greece,0.5",Hungary,0.585
+,Honduras - urban,0.344334977,4.947309951,Liberia,8.5213,"Grenada,0.4",Iceland,0.899
+,Hungary,0.298782071,1.117563393,Libya,1.3265,"Guatemala,0.4",India,0.564
+,Iceland,0.251717426,3.028430178,Lithuania,1.7083,"Guinea,0.3",Indonesia,0.587
+,India,0.31325787,3.143496489,Madagascar,4.4351,"Guinea-Bissau,0.2",Iran,0.25
+,India - rural,0.324976853,4.291463448,Malaysia,0.7091,"Guyana,0.3",Iraq,0.354
+,India - urban,0.331538347,3.298972711,Mali,2.3829,"Haiti,0.3",Ireland,0.898
+,Indonesia,0.325819904,7.232196976,Mauritania,4.3067,"Honduras,0.4",Israel,0.821
+,Indonesia - rural,0.334647977,0.819680359,Mexico,0.6423,"Hungary,0.4",Italy,0.871
+,Indonesia - urban,0.335005161,3.598543369,Moldova,2.5799,"Iceland,0.5",Jamaica,0.787
+,Iran,0.330574095,3.696294041,Mongolia,2.4318,"India,0.5",Japan,0.857
+,Iraq,0.354285083,1.798609531,Montenegro,4.8015,"Indonesia,0.4",Jordan,0.454
+,Ireland,0.346567276,2.658191599,Morocco,0.8573,"Iran,-0.5",Kazakhstan,0.276
+,Israel,0.343994314,6.043203704,Mozambique,3.1746,"Iraq,0.2",Kenya,0.576
+,Italy,0.336858106,5.067112449,Myanmar,0.5972,"Ireland,0.5",Kosovo,0.624
+,Jamaica,0.343337622,2.549926963,Namibia,4.3496,"Israel,0.7",Kuwait,0.496
+,Japan,0.230444933,7.730451429,Nepal,3.4016,"Italy,0.6",Kyrgyzstan,0.448
+,Jordan,0.313223423,5.094401236,Netherlands,0.5937,"Jamaica,0.4",Laos,0.101
+,Kazakhstan,0.310592689,4.077517822,New Zealand,1.6836,"Japan,0.6",Latvia,0.83
+,Kenya,0.302298534,1.064477552,Nicaragua,3.7337,"Jordan,0.5",Lebanon,0.474
+,Kiribati,0.288371061,1.230068583,Niger,2.5998,"Kazakhstan,0.3",Lesotho,0.644
+,Kosovo,0.294660779,1.440650908,Nigeria,0.5745,"Kenya,0.4",Liberia,0.582
+,Kyrgyzstan,0.297889898,3.297921245,North Korea,0.4621,"Kiribati,0.3",Libya,0.095
+,Laos,0.287154333,3.459145164,North Macedonia,5.7275,"Korea North,-0.5",Lithuania,0.879
+,Latvia,0.295875829,3.876482144,Norway,0.5455,"Korea South,0.6",Luxembourg,0.905
+,Lebanon,0.305799959,1.514848721,Oman,1.4453,"Kosovo,0.4",Madagascar,0.415
+,Lesotho,0.304373858,5.314620305,Pakistan,0.1572,"Kuwait,0.4",Malawi,0.599
+,Liberia,0.314962324,3.686064684,Panama,5.0255,"Kyrgyzstan,0.2",Malaysia,0.536
+,Lithuania,0.302522631,4.06608085,Paraguay,2.6873,"Laos,0.1",Maldives,0.636
+,Luxembourg,0.308016687,2.654172266,Peru,0.7453,"Latvia,0.5",Mali,0.448
+,Madagascar,0.304763178,5.583297071,Philippines,0.8076,"Lebanon,0.2",Malta,0.774
+,Malawi,0.307531331,2.875743855,Poland,0.4179,"Lesotho,0.3",Mauritania,0.357
+,Malaysia,0.305356828,3.433538889,Portugal,0.7282,"Liberia,0.3",Mauritius,0.715
+,Maldives,0.30532775,2.800101344,Qatar,1.4429,"Libya,-0.2",Mexico,0.553
+,Mali,0.30797074,3.179570046,Republic of the Congo,3.1759,"Liechtenstein,0.4",Moldova,0.665
+,Malta,0.29737585,1.566071422,Romania,0.5938,"Lithuania,0.5",Mongolia,0.656
+,Marshall Islands,0.308487901,3.644274346,Russia,0.0501,"Luxembourg,0.5",Montenegro,0.554
+,Mauritania,0.302115515,3.60016959,Saudi Arabia,0.2966,"Madagascar,0.3",Morocco,0.474
+,Mauritius,0.346502852,6.503477709,Serbia,0.9923,"Malawi,0.3",Mozambique,0.441
+,Mexico,0.364549364,2.610818892,Sierra Leone,7.5206,"Malaysia,0.4",Namibia,0.685
+,Micronesia (country),0.252776662,3.772385436,Singapore,0.6253,"Maldives,0.3",Nepal,0.603
+,Micronesia (country) - urban,0.268328779,5.194606444,Slovakia,0.9617,"Mali,0.3",Netherlands,0.93
+,Moldova,0.266215925,6.965203178,Slovenia,1.9486,"Malta,0.4",New Zealand,0.928
+,Mongolia,0.265549077,4.445803759,Somalia,11.8854,"Marshall Islands,0.5",Nicaragua,0.137
+,Montenegro,0.258764899,4.024858059,South Africa,0.4276,"Mauritania,0.2",Nigeria,0.503
+,Morocco,0.288465469,1.436444248,South Korea,0.1261,"Mauritius,0.4",North Korea,0.029
+,Mozambique,0.275708056,3.450398694,South Sudan,2.5072,"Mexico,0.5",North Macedonia,0.582
+,Myanmar,0.329429829,4.169335423,Spain,0.2901,"Micronesia Federated States of,0.4",Norway,0.956
+,Namibia,0.334065309,1.999754584,Sri Lanka,1.4729,"Moldova,0.3",Oman,0.251
+,Nauru,0.332012921,0.31693259,Sudan,1.3382,"Monaco,0.4",Pakistan,0.375
+,Nepal,0.321303194,0.54947256,Suriname,7.4234,"Mongolia,0.3",Palestine/Gaza,0.055
+,Netherlands,0.323852725,4.387958836,Sweden,0.4231,"Montenegro,0.4",Palestine/West Bank,0.082
+,Nicaragua,0.216037193,2.835586652,Switzerland,0.5015,"Morocco,0.4",Panama,0.691
+,Niger,0.287617309,3.517474536,Syria,0.6953,"Mozambique,0.3",Papua New Guinea,0.49
+,Nigeria,0.320183498,5.536677718,Taiwan,0.3215,"Myanmar (Burma),0.1",Paraguay,0.558
+,North Macedonia,0.317381486,6.239227006,Tajikistan,2.7163,"Namibia,0.3",Peru,0.716
+,Norway,0.311674836,3.027887623,Tanzania,2.8437,"Nauru,0.3",Philippines,0.443
+,Pakistan,0.305767237,5.14080734,Thailand,0.4581,"Nepal,0.2",Poland,0.71
+,Palestine,0.303362442,4.453561308,Tunisia,1.3664,"Netherlands,0.6",Portugal,0.864
+,Panama,0.288210118,2.130035635,Turkey,0.1961,"New Zealand,0.6",Qatar,0.054
+,Papua New Guinea,0.264798851,2.497995048,Turkmenistan,1.6728,"Nicaragua,0.2",Romania,0.731
+,Paraguay,0.275534107,2.351135371,Uganda,2.2436,"Niger,0.3",Russia,0.262
+,Peru,0.28275443,3.814642768,Ukraine,0.3266,"Nigeria,0.4",Rwanda,0.269
+,Philippines,0.296123799,4.114482022,United Arab Emirates,0.5859,"North Macedonia,0.4",São Tomé and Príncipe,0.707
+,Poland,0.278260446,2.137176597,United Kingdom,0.1382,"Norway,0.6",Saudi Arabia,0.048
+,Portugal,0.276893063,2.303888392,United States,0.0453,"Oman,0.4",Serbia,0.439
+,Romania,0.285665998,4.044598379,Uruguay,2.4526,"Pakistan,0.2",Seychelles,0.716
+,Russia,0.271525517,4.452728946,Uzbekistan,0.8272,"Palau,0.4",Sierra Leone,0.615
+,Rwanda,0.26526199,1.140582519,Venezuela,0.6664,"Panama,0.4",Singapore,0.562
+,Rwanda - rural,0.265750525,4.35501417,Vietnam,0.4521,"Papua New Guinea,0.3",Slovakia,0.836
+,Saint Lucia,0.271766668,3.544075011,Yemen,1.4754,"Paraguay,0.4",Slovenia,0.782
+,Samoa,0.256332263,3.048197064,Zambia,2.1966,"Peru,0.4",Solomon Islands,0.641
+,Sao Tome and Principe,0.253066162,3.063101075,Zimbabwe,2.2498,"Philippines,0.5",Somalia,0.082
+,Senegal,0.2544457,3.958973759,,,"Poland,0.5",Somaliland,0.432
+,Serbia,0.252405254,3.207581538,,,"Portugal,0.5",South Africa,0.72
+,Seychelles,0.252778477,1.941554599,,,"Qatar,0.4",South Korea,0.883
+,Sierra Leone,0.243833552,1.582009483,,,"Romania,0.5",South Sudan,0.053
+,Slovakia,0.252038515,5.388349048,,,"Russia,-0.4",Spain,0.912
+,Slovenia,0.25714683,2.013888904,,,"Rwanda,0.3",Sri Lanka,0.54
+,Solomon Islands,0.249518773,0.926764963,,,"Saint Kitts and Nevis,0.4",Sudan,0.064
+,Somalia,0.284122689,5.26493699,,,"Saint Lucia,0.4",Suriname,0.714
+,South Africa,0.268325629,3.55015206,,,"Saint Vincent and the Grenadines,0.4",Sweden,0.946
+,South Korea,0.331375589,3.120202527,,,"Samoa,0.4",Switzerland,0.934
+,South Sudan,0.281439485,2.916683461,,,"San Marino,0.4",Syria,0.053
+,Spain,0.30541503,2.218475013,,,"Sao Tome and Principe,0.3",Taiwan,0.847
+,Sri Lanka,0.293373291,1.116605487,,,"Saudi Arabia,0.4",Tajikistan,0.111
+,Sudan,0.280544964,2.757051904,,,"Senegal,0.4",Tanzania,0.567
+,Suriname - urban,0.292379744,3.757562022,,,"Serbia,0.3",Thailand,0.3
+,Sweden,0.283740114,3.071667915,,,"Seychelles,0.4",The Gambia,0.622
+,Switzerland,0.285513502,3.946394574,,,"Sierra Leone,0.3",Timor-Leste,0.612
+,Syria,0.283751912,2.161539995,,,"Singapore,0.5",Togo,0.387
+,Taiwan,0.280606956,5.286888088,,,"Slovakia,0.5",Trinidad and Tobago,0.784
+,Tajikistan,0.274910949,3.399597597,,,"Slovenia,0.5",Tunisia,0.779
+,Tanzania,0.276692012,2.818479781,,,"Solomon Islands,0.3",Turkey,0.29
+,Thailand,0.281341459,2.516608659,,,"Somalia,-0.2",Turkmenistan,0.09
+,Togo,0.277294625,3.048606164,,,"South Africa,0.5",Uganda,0.409
+,Tonga,0.275809819,1.848440256,,,"Spain,0.5",Ukraine,0.54
+,Trinidad and Tobago,0.273879678,-0.456592141,,,"Sri Lanka,0.4",United Arab Emirates,0.166
+,Tunisia,0.272144137,2.13355946,,,"Sudan,0.1",United Kingdom,0.892
+,Turkey,0.272198008,4.088847017,,,"Sudan South,0.2",United States of America,0.811
+,Turkmenistan,0.60253986,2.74199744,,,"Suriname,0.3",Uruguay,0.847
+,Tuvalu,0.609084287,1.371747748,,,"Sweden,0.5",Uzbekistan,0.269
+,Uganda,0.575542832,2.152599958,,,"Switzerland,0.5",Vanuatu,0.769
+,Ukraine,0.565936851,1.74686255,,,"Syria,-0.3",Venezuela,0.118
+,United Arab Emirates,0.604253153,3.814106355,,,"Taiwan,0.5","Vietnam, Democratic Republic",0.254
+,United Kingdom,0.549060262,2.588841337,,,"Tajikistan,0.2",Yemen,0.041
+,United States,0.532627659,4.965232699,,,"Tanzania,0.3",Zambia,0.456
+,Uruguay,0.385781991,4.362277112,,,"Thailand,0.4",Zanzibar,0.349
+,Uruguay - urban,0.434397071,5.286150218,,,"Togo,0.3",Zimbabwe,0.336
+,Uzbekistan,0.477559141,4.419843142,,,"Tonga,0.3",,
+,Vanuatu,0.378086,2.982268345,,,"Trinidad and Tobago,0.4",,
+,Venezuela,0.408980009,3.353923342,,,"Tunisia,0.4",,
+,Vietnam,0.380907722,2.533565088,,,"Turkey,0.4",,
+,Yemen,0.388093271,1.92506566,,,"Turkmenistan,0.2",,
+,Zambia,0.374414096,3.191680426,,,"Tuvalu,0.3",,
+,Zimbabwe,0.581644284,4.699483992,,,"Uganda,0.3",,
+,,,,,,"Ukraine,0.4",,
+,,,,,,"United Arab Emirates,0.5",,
+,,,,,,"United Kingdom,0.6",,
+,,,,,,"United States,1",,
+,,,,,,"Uruguay,0.4",,
+,,,,,,"Uzbekistan,0.3",,
+,,,,,,"Vanuatu,0.3",,
+,,,,,,"Vatican City,0.4",,
+,,,,,,"Venezuela,-0.3",,
+,,,,,,"Vietnam,0.2",,
+,,,,,,"Yemen,-0.3",,
+,,,,,,"Zambia,0.3",,
+,,,,,,"Zimbabwe,0.1",,
