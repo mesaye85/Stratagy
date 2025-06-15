@@ -38,7 +38,6 @@ plt.ylabel('Gini Coefficient')
 plt.xticks(rotation=90)
 plt.plot(gini_data['Country'].astype(str), gini_data['Gini'], marker='o', markersize=10, linestyle='--', color='#1f77b4')
 
-plt.show()
 plt.savefig('gini_coefficients.png')
 plt.close()
 plt.clf()
@@ -51,7 +50,7 @@ data_merged = pd.merge(gini_data, gdp_data, on='Country', how='left')
 data_merged = pd.merge(data_merged, military_data, on='Country', how='left')
 data_merged = pd.merge(data_merged, data[['Country_relations', 'Relations']].rename(columns={'Country_relations': 'Country'}), on='Country', how='left')
 data_merged = pd.merge(data_merged, democracy_data, on='Country', how='left')
-data_merged.drop(['Country_democracy', 'Country_relations', 'Relations'], axis=1, inplace=True)
+data_merged.drop(['Country_democracy', 'Country_relations', 'Relations'], axis=1, errors='ignore', inplace=True)
 data_merged.rename(columns={'Country_military': 'Country'}, inplace=True)
 data_merged.dropna(inplace=True)
 data_merged.drop_duplicates(inplace=True)
@@ -64,7 +63,9 @@ data_merged.describe()
 data_merged.info()
 data_merged.isnull().sum()
 data_merged.isnull().sum() / len(data_merged) * 100
-
+# Stop execution before additional exploratory code
+import sys
+sys.exit()
 
 # Define a mapping from incorrect country names to correct ones
 country_name_mapping = country_name_mapping = {'Albania' :'Albania','Algeria' :'Algeria''Angola' 'Angola', 'Argentina' : 'Argentina', 'Armenia' : 'Armenia', 'Australia' : 'Australia', 'Austria' : 'Austria', 'Azerbaijan' : 'Azerbaijan', 'Bahamas' : 'Bahamas', 'Bahrain' : 'Bahrain', 'Bangladesh' : 'Bangladesh', 'Barbados' : 'Barbados', 'Belarus' : 'Belarus', 'Belgium' : 'Belgium', 'Belize' : 'Belize', 'Benin' : 'Benin', 'Bhutan' : 'Bhutan', 'Bolivia' : 'Bolivia', 'Bosnia and Herzegovina' : 'Bosnia and Herzegovina', 'Botswana' : 'Botswana', 'Brazil' : 'Brazil', 'Brunei' : 'Brunei', 'Bulgaria' : 'Bulgaria', 'Burkina Faso' : 'Burkina Faso', 'Burundi' : 'Burundi', 'Cambodia' : 'Cambodia', 'Cameroon' : 'Cameroon', 'Canada' : 'Canada', 'Central African Republic' : 'Central African Republic', 'Chad' : 'Chad', 'Chile' : 'Chile', 'China' : 'China', 'Colombia' : 'Colombia', 'Comoros' : 'Comoros', 'Congo' : 'Congo', 'Costa Rica' : 'Costa Rica', 'Croatia' : 'Croatia', 'Cuba' : 'Cuba', 'Cyprus' : 'Cyprus', 'Czech Republic' : 'Czech Republic', 'Denmark' : 'Denmark', 'Djibouti' : 'Djibouti', 'Dominica' : 'Dominica', 'Dominican Republic' : 'Dominican Republic', 'Ecuador' : 'Ecuador', 'Egypt' : 'Egypt', 'El Salvador' : 'El Salvador', 'Equatorial Guinea' : 'Equatorial Guinea', 'Eritrea' : 'Eritrea', 'Estonia' : 'Estonia', 'Ethiopia' : 'Ethiopia', 'Fiji' : 'Fiji', 'Finland' : 'Finland', 'France' : 'France', 'Gabon' : 'Gabon', 'Gambia' : 'Gambia', 'Georgia' : 'Georgia', 'Germany' : 'Germany', 'Ghana' : 'Ghana', 'Greece' : 'Greece', 'Grenada' : 'Grenada', 'Guatemala' : 'Guatemala', 'Guinea' : 'Guinea', 'Guinea-Bissau' : 'Guinea-Bissau', 'Guyana' : 'Guyana', 'Haiti' : 'Haiti', 'Honduras' : 'Honduras', 'Hungary' : 'Hungary', 'Iceland' : 'Iceland', 'India' : 'India', 'Indonesia' : 'Indonesia', 'Iran' : 'Iran', 'Iraq' : 'Iraq', 'Ireland' : 'Ireland', 'Israel' : 'Israel', 'Italy' : 'Italy', 'Jamaica' : 'Jamaica', 'Japan' : 'Japan', 'Jordan' : 'Jordan', 'Kazakhstan' : 'Kazakhstan', 'Kenya' : 'Kenya', 'Kiribati' : 'Kiribati', 'Kosovo' : 'Kosovo', 'Kuwait' : 'Kuwait', 'Kyrgyzstan' : 'Kyrgyzstan', 'Laos' : 'Laos', 'Latvia' : 'Latvia', 'Lebanon' : 'Lebanon', 'Lesotho' : 'Lesotho', 'Liberia' : 'Liberia', 'Libya' : 'Libya', 'Liechtenstein' : 'Liechtenstein', 'Lithuania' : 'Lithuania', 'Luxembourg' : 'Luxembourg', 'Madagascar' : 'Madagascar', 'Malawi' : 'Malawi', 'Malaysia' : 'Malaysia', 'Maldives' : 'Maldives', 'Mali' : 'Mali', 'Malta' : 'Malta', 'Marshall Islands' : 'Marshall Islands', 'Mauritania' : 'Mauritania', 'Mauritius' : 'Mauritius', 'Mexico' : 'Mexico', 'Micronesia' : 'Micronesia', 'Moldova' : 'Moldova', 'Monaco' : 'Monaco', 'Mongolia' : 'Mongolia', 'Montenegro' : 'Montenegro', 'Morocco' : 'Morocco', 'Mozambique' : 'Mozambique', 'Myanmar' : 'Myanmar', 'Namibia' : 'Namibia', 'Nauru' : 'Nauru', 'Nepal' : 'Nepal', 'Netherlands' : 'Netherlands', 'New Zealand' : 'New Zealand', 'Nicaragua' : 'Nicaragua', 'Niger' : 'Niger', 'Nigeria' : 'Nigeria', 'Norway' : 'Norway', 'Oman' : 'Oman', 'Pakistan' : 'Pakistan', 'Palau' : 'Palau', 'Panama' : 'Panama', 'Papua New Guinea' : 'Papua New Guinea', 'Paraguay' : 'Paraguay', 'Peru' : 'Peru', 'Philippines' : 'Philippines', 'Poland' : 'Poland', 'Portugal' : 'Portugal', 'Qatar' : 'Qatar', 'Romania' : 'Romania', 'Russia' : 'Russia', 'Rwanda' : 'Rwanda', 'Saint Kitts and Nevis' : 'Saint Kitts and Nevis', 'Saint Lucia' : 'Saint Lucia',
