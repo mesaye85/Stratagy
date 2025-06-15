@@ -1,112 +1,270 @@
 import pandas as pd
-#import numpy as np
-import seaborn as sns
+import numpy as np
 import matplotlib.pyplot as plt
-#import sklearn
-#from sklearn.model_selection import train_test_split
-#from sklearn.regressor import LinearRegression
-
-
-# Read the CSV file
-data = pd.read_csv('main.csv')
-
-
-# Splitting the 'Country, Relations' column
-relations_split = data['Country, Relations'].str.split(',', n=1, expand=True)
-data['Country_relations'] = relations_split[0]
-data['Relations'] = relations_split[1]
-
-# Dropping the original 'Country, Relations' column
-data.drop(['Country, Relations'], axis=1, inplace=True)
-
-# Renaming the country columns to be consistent
-data.rename(columns={'Country.1': 'Country_military', 'Country.2': 'Country_democracy', 'Military ': 'Military'}, inplace=True)
-
-# Separate the data into different DataFrames
-gini_data = data[['Country', 'Gini']]
-gdp_data = data[['Country', 'GDP']]
-military_data = data[['Country_military', 'Military']].rename(columns={'Country_military': 'Country'})
-democracy_data = data[['Country_democracy', 'Democracy']].rename(columns={'Country_democracy': 'Country'})
-
-# Plotting the Gini coefficients
-plt.figure(figsize=(12, 8))
-sns.set_style('whitegrid')
-sns.set_context('paper')
-plt.title('Gini Coefficients')
-plt.xlabel('Countries')
-plt.ylabel('Gini Coefficient')
-plt.xticks(rotation=90)
-plt.plot(gini_data['Country'].astype(str), gini_data['Gini'], marker='o', markersize=10, linestyle='--', color='#1f77b4')
-
-plt.savefig('gini_coefficients.png')
-plt.close()
-plt.clf()
-plt.cla()
-plt.close()
-
-
-# Merging the DataFrames based on the country name
-data_merged = pd.merge(gini_data, gdp_data, on='Country', how='left')
-data_merged = pd.merge(data_merged, military_data, on='Country', how='left')
-data_merged = pd.merge(data_merged, data[['Country_relations', 'Relations']].rename(columns={'Country_relations': 'Country'}), on='Country', how='left')
-data_merged = pd.merge(data_merged, democracy_data, on='Country', how='left')
-data_merged.drop(['Country_democracy', 'Country_relations', 'Relations'], axis=1, errors='ignore', inplace=True)
-data_merged.rename(columns={'Country_military': 'Country'}, inplace=True)
-data_merged.dropna(inplace=True)
-data_merged.drop_duplicates(inplace=True)
-data_merged.reset_index(drop=True, inplace=True)
-data_merged.drop(['Gini', 'GDP', 'Military'], axis=1, inplace=True)
-data_merged.to_csv('main_merged.csv', index=False)
-data_merged.head()
-data_merged.shape
-data_merged.describe()
-data_merged.info()
-data_merged.isnull().sum()
-data_merged.isnull().sum() / len(data_merged) * 100
-# Stop execution before additional exploratory code
+import seaborn as sns
+import os
 import sys
-sys.exit()
 
-# Define a mapping from incorrect country names to correct ones
-country_name_mapping = country_name_mapping = {'Albania' :'Albania','Algeria' :'Algeria''Angola' 'Angola', 'Argentina' : 'Argentina', 'Armenia' : 'Armenia', 'Australia' : 'Australia', 'Austria' : 'Austria', 'Azerbaijan' : 'Azerbaijan', 'Bahamas' : 'Bahamas', 'Bahrain' : 'Bahrain', 'Bangladesh' : 'Bangladesh', 'Barbados' : 'Barbados', 'Belarus' : 'Belarus', 'Belgium' : 'Belgium', 'Belize' : 'Belize', 'Benin' : 'Benin', 'Bhutan' : 'Bhutan', 'Bolivia' : 'Bolivia', 'Bosnia and Herzegovina' : 'Bosnia and Herzegovina', 'Botswana' : 'Botswana', 'Brazil' : 'Brazil', 'Brunei' : 'Brunei', 'Bulgaria' : 'Bulgaria', 'Burkina Faso' : 'Burkina Faso', 'Burundi' : 'Burundi', 'Cambodia' : 'Cambodia', 'Cameroon' : 'Cameroon', 'Canada' : 'Canada', 'Central African Republic' : 'Central African Republic', 'Chad' : 'Chad', 'Chile' : 'Chile', 'China' : 'China', 'Colombia' : 'Colombia', 'Comoros' : 'Comoros', 'Congo' : 'Congo', 'Costa Rica' : 'Costa Rica', 'Croatia' : 'Croatia', 'Cuba' : 'Cuba', 'Cyprus' : 'Cyprus', 'Czech Republic' : 'Czech Republic', 'Denmark' : 'Denmark', 'Djibouti' : 'Djibouti', 'Dominica' : 'Dominica', 'Dominican Republic' : 'Dominican Republic', 'Ecuador' : 'Ecuador', 'Egypt' : 'Egypt', 'El Salvador' : 'El Salvador', 'Equatorial Guinea' : 'Equatorial Guinea', 'Eritrea' : 'Eritrea', 'Estonia' : 'Estonia', 'Ethiopia' : 'Ethiopia', 'Fiji' : 'Fiji', 'Finland' : 'Finland', 'France' : 'France', 'Gabon' : 'Gabon', 'Gambia' : 'Gambia', 'Georgia' : 'Georgia', 'Germany' : 'Germany', 'Ghana' : 'Ghana', 'Greece' : 'Greece', 'Grenada' : 'Grenada', 'Guatemala' : 'Guatemala', 'Guinea' : 'Guinea', 'Guinea-Bissau' : 'Guinea-Bissau', 'Guyana' : 'Guyana', 'Haiti' : 'Haiti', 'Honduras' : 'Honduras', 'Hungary' : 'Hungary', 'Iceland' : 'Iceland', 'India' : 'India', 'Indonesia' : 'Indonesia', 'Iran' : 'Iran', 'Iraq' : 'Iraq', 'Ireland' : 'Ireland', 'Israel' : 'Israel', 'Italy' : 'Italy', 'Jamaica' : 'Jamaica', 'Japan' : 'Japan', 'Jordan' : 'Jordan', 'Kazakhstan' : 'Kazakhstan', 'Kenya' : 'Kenya', 'Kiribati' : 'Kiribati', 'Kosovo' : 'Kosovo', 'Kuwait' : 'Kuwait', 'Kyrgyzstan' : 'Kyrgyzstan', 'Laos' : 'Laos', 'Latvia' : 'Latvia', 'Lebanon' : 'Lebanon', 'Lesotho' : 'Lesotho', 'Liberia' : 'Liberia', 'Libya' : 'Libya', 'Liechtenstein' : 'Liechtenstein', 'Lithuania' : 'Lithuania', 'Luxembourg' : 'Luxembourg', 'Madagascar' : 'Madagascar', 'Malawi' : 'Malawi', 'Malaysia' : 'Malaysia', 'Maldives' : 'Maldives', 'Mali' : 'Mali', 'Malta' : 'Malta', 'Marshall Islands' : 'Marshall Islands', 'Mauritania' : 'Mauritania', 'Mauritius' : 'Mauritius', 'Mexico' : 'Mexico', 'Micronesia' : 'Micronesia', 'Moldova' : 'Moldova', 'Monaco' : 'Monaco', 'Mongolia' : 'Mongolia', 'Montenegro' : 'Montenegro', 'Morocco' : 'Morocco', 'Mozambique' : 'Mozambique', 'Myanmar' : 'Myanmar', 'Namibia' : 'Namibia', 'Nauru' : 'Nauru', 'Nepal' : 'Nepal', 'Netherlands' : 'Netherlands', 'New Zealand' : 'New Zealand', 'Nicaragua' : 'Nicaragua', 'Niger' : 'Niger', 'Nigeria' : 'Nigeria', 'Norway' : 'Norway', 'Oman' : 'Oman', 'Pakistan' : 'Pakistan', 'Palau' : 'Palau', 'Panama' : 'Panama', 'Papua New Guinea' : 'Papua New Guinea', 'Paraguay' : 'Paraguay', 'Peru' : 'Peru', 'Philippines' : 'Philippines', 'Poland' : 'Poland', 'Portugal' : 'Portugal', 'Qatar' : 'Qatar', 'Romania' : 'Romania', 'Russia' : 'Russia', 'Rwanda' : 'Rwanda', 'Saint Kitts and Nevis' : 'Saint Kitts and Nevis', 'Saint Lucia' : 'Saint Lucia',
-'Saint Vincent and the Grenadines' : 'Saint Vincent and the Grenadines', 'Samoa' : 'Samoa', 'San Marino' : 'San Marino', 'Sao Tome and Principe' : 'Sao Tome and Principe', 'Saudi Arabia' : 'Saudi Arabia', 'Senegal' : 'Senegal', 'Serbia' : 'Serbia', 'Seychelles' : 'Seychelles', 'Sierra Leone' : 'Sierra Leone', 'Singapore' : 'Singapore', 'Slovakia' : 'Slovakia', 'Slovenia' : 'Slovenia', 'Solomon Islands' : 'Solomon Islands', 'Somalia' : 'Somalia', 'South Africa' : 'South Africa', 'South Korea' : 'South Korea', 'Spain' : 'Spain', 'Sri Lanka' : 'Sri Lanka', 'Sudan' : 'Sudan', 'Suriname' : 'Suriname', 'Sweden' : 'Sweden', 'Switzerland' : 'Switzerland', 'Syria' : 'Syria', 'Taiwan' : 'Taiwan', 'Tajikistan' : 'Tajikistan', 'Tanzania' : 'Tanzania', 'Thailand' : 'Thailand', 'Togo' : 'Togo', 'Tonga' : 'Tonga', 'Trinidad and Tobago' : 'Trinidad and Tobago', 'Tunisia' : 'Tunisia', 'Turkey' : 'Turkey', 'Turkmenistan' : 'Turkmenistan', 'Tuvalu' : 'Tuvalu', 'Uganda' : 'Uganda', 'Ukraine' : 'Ukraine', 'United Arab Emirates' : 'United Arab Emirates', 'United Kingdom' : 'United Kingdom', 'United States' : 'United States', 'Uruguay' : 'Uruguay', 'Uzbekistan' : 'Uzbekistan', 'Vanuatu' : 'Vanuatu', 'Vatican City' : 'Vatican City', 'Venezuela' : 'Venezuela', 'Vietnam' : 'Vietnam', 'Yemen' : 'Yemen', 'Zambia' : 'Zambia', 'Zimbabwe' : 'Zimbabwe'}
-gini_data = data[['Country', 'Gini']].copy()
-gini_data['Country'] = gini_data['Country'].replace(country_name_mapping)
-
-# Apply the mapping to correct the country names
-gdp_data = data[['Country', 'GDP']].copy() 
-gdp_data['Country'] = gdp_data['Country'].replace(country_name_mapping)
-gdp_data['Country'].replace(country_name_mapping)
-military_data = data[['Country_military', 'Military']].copy()
-military_data['Country_military'] = military_data['Country_military'].replace(country_name_mapping)
-democracy_data['Country'] = democracy_data['Country'].replace(country_name_mapping)
-
-
-print(set(gini_data['Country']) - set(gdp_data['Country']))
-print(set(military_data['Country_military']) - set(gdp_data['Country']))
-print(set(democracy_data['Country']) - set(gdp_data['Country']))
-
-# Plotting the Gini coefficients
-plt.figure(figsize=(12, 8))
-sns.set_style('whitegrid')
-sns.set_context('paper')
-plt.title('Gini Coefficients')
-plt.xlabel('Countries')
-plt.ylabel('Gini Coefficient')
-plt.xticks(rotation=90)
-plt.plot(gini_data['Country'], gini_data['Gini'], marker='o',
-         markersize=10, linestyle='--', color='#1f77b4')
-plt.show()
-plt.savefig('gini_coefficients.png')
-plt.close()
-plt.clf()
-plt.cla()
-plt.close()
-
-# Merging the DataFrames based on the country name
-data_merged = pd.merge(gini_data, gdp_data, on='Country', how='left')
+# Path: main.py
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import confusion_matrix, accuracy_score, classification_report
+from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import GridSearchCV
+from sklearn.model_selection import RandomizedSearchCV
 
 
 
-# Now you have a merged DataFrame with all the information
-print(data_merged.head())
+# create a function to load the data from the csv files "electoral-democracy-index.csv", "gdp per capita.csv", "gini-index.csv", "military_rankings.csv"
+def load_data():
+    data = pd.read_csv("electoral-democracy-index.csv")
+    data1 = pd.read_csv("gdp per capita.csv")
+    data2 = pd.read_csv("gini-index.csv")
+    data3 = pd.read_csv("military_rankings.csv")
+    return data, data1, data2, data3
+
+# create a function to merge the data from the csv files "electoral-democracy-index.csv", "gdp per capita.csv", "gini-index.csv", "military_rankings.csv"
+def merge_data(data, data1, data2, data3):
+    data = pd.merge(data, data1, on='Country')
+    data = pd.merge(data, data2, on='Country')
+    data = pd.merge(data, data3, on='Country')
+    return data
+
+# create a function to clean the data
+def clean_data(data):
+    data = data.dropna()
+    data = data.drop(['Country Code', 'Year'], axis=1)
+    return data
+
+# create a function to split the data into training and testing sets
+def split_data(data):
+    X = data.drop(['Status'], axis=1)
+    y = data['Status']
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    scaler = StandardScaler()
+    X_train = scaler.fit_transform(X_train)
+    X_test = scaler.transform(X_test)
+    return X_train, X_test, y_train, y_test
+
+# create a function to train the model
+def train_model(X_train, y_train):
+    from sklearn.ensemble import RandomForestClassifier
+    classifier = RandomForestClassifier(n_estimators=100, criterion='entropy', random_state=42)
+    classifier.fit(X_train, y_train)
+    return classifier
+
+# create a function to predict the model
+def predict_model(classifier, X_test):
+    y_pred = classifier.predict(X_test)
+    return y_pred
+
+
+# create a function to evaluate the model
+def evaluate_model(y_test, y_pred):
+    cm = confusion_matrix(y_test, y_pred)
+    print(cm)
+    print(accuracy_score(y_test, y_pred))
+    print(classification_report(y_test, y_pred))
+    return cm
+
+# create a function to perform k-fold cross validation
+def k_fold_cross_validation(classifier, X_train, y_train):
+    accuracies = cross_val_score(estimator=classifier, X=X_train, y=y_train, cv=10)
+    print("Accuracy: {:.2f} %".format(accuracies.mean()*100))
+    print("Standard Deviation: {:.2f} %".format(accuracies.std()*100))
+    return accuracies
+
+# create a function to perform grid search
+def grid_search(classifier, X_train, y_train): 
+    parameters = [{'n_estimators': [10, 100, 1000], 'criterion': ['entropy', 'gini']}]
+    grid_search = GridSearchCV(estimator=classifier, param_grid=parameters, scoring='accuracy', cv=10, n_jobs=-1)
+    grid_search = grid_search.fit(X_train, y_train)
+    best_accuracy = grid_search.best_score_
+    best_parameters = grid_search.best_params_
+    print("Best Accuracy: {:.2f} %".format(best_accuracy*100))
+    print("Best Parameters:", best_parameters)
+    return best_accuracy, best_parameters
+
+# create a function to perform random search
+def random_search(classifier, X_train, y_train):
+    parameters = [{'n_estimators': [10, 100, 1000], 'criterion': ['entropy', 'gini']}]
+    random_search = RandomizedSearchCV(estimator=classifier, param_distributions=parameters, scoring='accuracy', cv=10, n_jobs=-1)
+    random_search = random_search.fit(X_train, y_train)
+    best_accuracy = random_search.best_score_
+    best_parameters = random_search.best_params_
+    print("Best Accuracy: {:.2f} %".format(best_accuracy*100))
+    print("Best Parameters:", best_parameters)
+    return best_accuracy, best_parameters
+
+# create a function to plot the confusion matrix
+def plot_confusion_matrix(cm):
+    plt.figure(figsize=(24, 16))
+    sns.heatmap(cm, annot=True, cmap='Blues', fmt='g')
+    plt.title('Confusion Matrix')
+    plt.xlabel('Predicted')
+    plt.ylabel('Truth')
+    plt.show()
+
+# create a function to plot the accuracy
+def plot_accuracy(accuracies):
+    plt.figure(figsize=(24, 16))
+    sns.distplot(accuracies)
+    plt.title('Accuracy')
+    plt.xlabel('Accuracy')
+    plt.ylabel('Frequency')
+    plt.show()
+
+# create a function to plot the classification report
+def plot_classification_report(classification_report):
+    plt.figure(figsize=(24, 16))
+    sns.heatmap(classification_report, annot=True, cmap='Blues', fmt='g')
+    plt.title('Classification Report')
+    plt.xlabel('Predicted')
+    plt.ylabel('Truth')
+    plt.show()
+
+# create a function to plot the ROC curve
+def plot_roc_curve(fpr, tpr, auc):
+    plt.figure(figsize=(24, 16))
+    plt.plot(fpr, tpr, color='red', label='ROC (AUC = %0.2f)' % auc)
+    plt.plot([0, 1], [0, 1], color='blue', linestyle='--')
+    plt.title('ROC Curve')
+    plt.xlabel('False Positive Rate')
+    plt.ylabel('True Positive Rate')
+    plt.legend(loc='lower right')
+    plt.show()
+
+# create a function to plot the precision-recall curve
+def plot_precision_recall_curve(precision, recall, average_precision):
+    plt.figure(figsize=(24, 16))
+    plt.plot(recall, precision, color='red', label='Precision-Recall (AP = %0.2f)' % average_precision)
+    plt.title('Precision-Recall Curve')
+    plt.xlabel('Recall')
+    plt.ylabel('Precision')
+    plt.legend(loc='lower right')
+    plt.show()
+
+# create a function to plot the learning curve
+def plot_learning_curve(classifier, X_train, y_train):
+    train_sizes, train_scores, test_scores = learning_curve(estimator=classifier, X=X_train, y=y_train, cv=10, n_jobs=-1, train_sizes=np.linspace(0.01, 1.0, 50))
+    train_mean = np.mean(train_scores, axis=1)
+    train_std = np.std(train_scores, axis=1)
+    test_mean = np.mean(test_scores, axis=1)
+    test_std = np.std(test_scores, axis=1)
+    plt.figure(figsize=(24, 16))
+    plt.plot(train_sizes, train_mean, color='red', marker='o', markersize=5, label='Training Accuracy')
+    plt.fill_between(train_sizes, train_mean + train_std, train_mean - train_std, alpha=0.15, color='red')
+    plt.plot(train_sizes, test_mean, color='blue', marker='o', markersize=5, label='Validation Accuracy')
+    plt.fill_between(train_sizes, test_mean + test_std, test_mean - test_std, alpha=0.15, color='blue')
+    plt.title('Learning Curve')
+    plt.xlabel('Training Examples')
+    plt.ylabel('Accuracy')
+    plt.legend(loc='lower right')
+    plt.show()
+
+# create a function to plot the validation curve
+def plot_validation_curve(classifier, X_train, y_train):
+    param_range = np.arange(1, 100, 1)
+    train_scores, test_scores = validation_curve(estimator=classifier, X=X_train, y=y_train, param_name='n_estimators', param_range=param_range, cv=10, n_jobs=-1)
+    train_mean = np.mean(train_scores, axis=1)
+    train_std = np.std(train_scores, axis=1)
+    test_mean = np.mean(test_scores, axis=1)
+    test_std = np.std(test_scores, axis=1)
+    plt.figure(figsize=(24, 16))
+    plt.plot(param_range, train_mean, color='red', marker='o', markersize=5, label='Training Accuracy')
+    plt.fill_between(param_range, train_mean + train_std, train_mean - train_std, alpha=0.15, color='red')
+    plt.plot(param_range, test_mean, color='blue', marker='o', markersize=5, label='Validation Accuracy')
+    plt.fill_between(param_range, test_mean + test_std, test_mean - test_std, alpha=0.15, color='blue')
+    plt.title('Validation Curve')
+    plt.xlabel('Number of Estimators')
+    plt.ylabel('Accuracy')
+    plt.legend(loc='lower right')
+    plt.show()
+
+# create a function to plot the decision boundary
+def plot_decision_boundary(classifier, X_train, y_train):
+    X_set, y_set = X_train, y_train
+    X1, X2 = np.meshgrid(np.arange(start=X_set[:, 0].min() - 1, stop=X_set[:, 0].max() + 1, step=0.01), 
+                         np.arange(start=X_set[:, 1].min() - 1, stop=X_set[:, 1].max() + 1, step=0.01))
+    plt.figure(figsize=(24, 16))
+    plt.contourf(X1, X2, classifier.predict(np.array([X1.ravel(), X2.ravel()]).T).reshape(X1.shape), 
+                 alpha=0.75, cmap=ListedColormap(('red', 'blue')))
+    plt.xlim(X1.min(), X1.max())
+    plt.ylim(X2.min(), X2.max())
+    for i, j in enumerate(np.unique(y_set)):
+        plt.scatter(X_set[y_set==j, 0], X_set[y_set==j, 1], c=ListedColormap(('red', 'blue'))(i), label=j)
+    plt.title('Decision Boundary')
+    plt.xlabel('X1')
+    plt.ylabel('X2')
+    plt.legend()
+    plt.show()
+
+
+# print the accuracy
+print('Accuracy: %.2f%%' % (accuracy * 100))
+
+# print the confusion matrix
+print('Confusion Matrix:')
+print(confusion_matrix)
+
+# print the classification report
+print('Classification Report:')
+print(classification_report)
+
+# plot the confusion matrix
+plot_confusion_matrix(confusion_matrix)
+
+# plot the classification report
+plot_classification_report(classification_report)
+
+# plot the ROC curve
+plot_roc_curve(fpr, tpr, auc)
+
+# plot the precision-recall curve
+plot_precision_recall_curve(precision, recall, average_precision)
+
+# plot the learning curve
+plot_learning_curve(classifier, X_train, y_train)
+
+# plot the validation curve
+plot_validation_curve(classifier, X_train, y_train)
+
+# plot the decision boundary
+plot_decision_boundary(classifier, X_train, y_train)
+
+# print the best parameters
+print('Best Parameters:')
+print(grid_search.best_params_)
+
+# print the best score
+print('Best Score: %.2f%%' % (grid_search.best_score_ * 100))
+
+# print the best estimator
+print('Best Estimator:')
+print(grid_search.best_estimator_)
+
+# print the best index
+print('Best Index:')
+print(grid_search.best_index_)
+
+
+
+#use the data to create a relationship matrix between the US and a nation
+# plot the relationship matrix
+plot_relationship_matrix(relationship_matrix)
+
+
+
+
+ #use the data to adjust relationship of the rest of the nations based on the relationship matrix
+plot = plot_relationship_matrix(relationship_matrix)
+plot.show()
+
+
+
+
+
+
+
+
+
