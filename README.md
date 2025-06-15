@@ -1,114 +1,148 @@
-# 🗳️ Structural Democracy Scoring System
+# CivicHorizon: Structural Input Normalization for Political System Assessment
 
-## 📌 Overview
+## Overview
 
-The Structural Democracy Scoring System is a machine-learning-powered application that classifies countries as **Democratic** or **Non-Democratic** based on real-world structural indicators. Unlike conventional indices that reflect geopolitical alignment or ideological expectations, this system focuses on **internal legitimacy**, **behavioral civic engagement**, and the **public’s anticipation of their future within the system**.
+**CivicHorizon** is a lightweight, schema-driven tool for evaluating the internal structure and functionality of political systems using a defined set of normalized, manually-verifiable inputs.
 
----
+The project is designed as an **open framework** to:
+- Test assumptions about governance structures
+- Normalize qualitative or semi-structured data into comparable values
+- Explore how structural features affect internal system resilience, adaptability, and coherence
 
-## 🎯 Purpose
+This tool is intended primarily for:
+- Systems designers and political engineers
+- Analysts modeling sociopolitical stability
+- Developers experimenting with logic-based civic diagnostics
+- Educators teaching complex system abstraction
 
-This project is designed to measure democracy not by international standards, but by one core principle:
-
-> **A democratic system is one in which the people act today as if the future is theirs.**
-
-This system answers:
-- Can the public influence and replace leadership?
-- Can they advocate, organize, and prosper regardless of status?
-- Do people act — not just hope — toward a shared future?
-
----
-
-## 🧠 Core Philosophy
-
-The model is based on three foundational ideas:
-
-1. **Humans are future-driven:** their sense of legitimacy depends on anticipated possibilities, not just current material conditions.
-2. **Agency must be activated:** democracy exists only when people are already using their voice, not merely allowed to.
-3. **Democracy is structurally resilient:** legitimacy must be sustained across time, conflict, and dissent.
+It does **not** use opaque ML models or externally imposed scores. All output is traceable to input.
 
 ---
 
-## 🧱 System Architecture
+## Recent Technical Improvements
 
-### 🔹 Input:
-- A tabular dataset (CSV or Excel) with 20 democracy indicators across 5 domains.
-- Each country is assigned scores from **0–10** per feature, with a final label: `'Democratic'` or `'Non-Democratic'`.
+- **Modular Input Pipeline:**
+  - Supports both CSV and JSON input formats out of the box.
+  - Easily extensible to new formats (e.g., API, NLP, database) via a simple registration decorator.
 
-### 🔹 Processing:
-- Data cleaning, scaling, and train/test splitting
-- Classification using a Random Forest model
-- Optional hyperparameter tuning with GridSearch or RandomSearch
-- Cross-validation for robustness
+- **Weighted and User-Configurable Aggregation:**
+  - Aggregates indicator fields into the final `Democracy_Status` using user-specified weights (via `weights.json`) or defaults to equal weighting.
+  - Weights are normalized and can be changed without code modification.
 
-### 🔹 Output:
-- Textual evaluation: accuracy, confusion matrix, classification report
-- Printed model parameters and validation scores
+- **Schema-Driven Validation:**
+  - All data is validated against `schema/schema.json`.
+  - The loader warns about missing or extra fields, ensuring data quality and schema consistency.
 
----
+- **Metadata and Auditability:**
+  - Each indicator can include `*_definition` and `*_source` fields for operational definitions and data sources.
+  - These metadata fields are preserved in all outputs (CSV/JSON) and are not used in scoring.
 
-## 🧩 Domains & Features
+- **Diagnostic and Field Impact Reporting:**
+  - CLI and JSON outputs include a breakdown of each field's contribution to the final score.
+  - Reports highlight the highest/lowest impact fields, missing/default values, and provide transparent diagnostics for each country.
 
-| Domain | Features |
-|--------|----------|
-| **1. Power Responsiveness** | Leadership Turnover, Local Governance Autonomy, Policy Responsiveness |
-| **2. Sociopolitical Coherence** | Language Alignment, Participation Accessibility, Civilian Control, Structural Advocacy & Prosperity (for minorities) |
-| **3. Material Well-being** | Healthcare Access, Education Completion, Food Sovereignty, Migration Freedom |
-| **4. Future Perception** | Agency Projection, Pathway to Influence, Collective Future Confidence, System Adaptability |
-| **5. Behavioral Engagement** | Collective Momentum, Life Investment, Exit vs. Voice Behavior, Narrative-Action Alignment |
+- **Experimental Inference Model (Imputation):**
+  - Enable with `CIVIC_IMPUTE=1` (environment variable).
+  - Trains a lightweight, traceable linear model to fill missing indicator values using available data.
+  - Imputed values are clearly marked in the output for auditability.
+  - Skips imputation for fields with no data and never fails on incomplete input.
 
-Each score must reflect observable public behavior or systemic accessibility — not ideology or sentiment.
+- **Robust Error Handling:**
+  - Handles `None`/missing values gracefully in all calculations.
+  - Skips model training for fields with all values missing.
+  - Aggregation logic never fails due to incomplete or partial data.
 
----
-
-## 🛠️ How It Works
-
-1. **Prepare Data**  
-   - Load structured data using the provided schema  
-   - Drop missing entries  
-   - Separate features (`X`) and labels (`y`)
-
-2. **Train Model**  
-   - Standardize features  
-   - Fit a RandomForestClassifier  
-   - Predict and evaluate performance on test data
-
-3. **Validation & Optimization**  
-   - Run k-fold cross-validation (default 10-fold)  
-   - (Optional) Run GridSearchCV or RandomizedSearchCV  
-   - Print accuracy, best parameters, and diagnostics
+- **Improved Test Coverage:**
+  - (Described for maintainers) Tests cover schema compliance, aggregation logic, input/output handling, and edge cases (missing fields, empty input, etc.).
 
 ---
 
-## 🔍 Why This Is Different
+## Project Objectives
 
-- ✅ **Non-ideological**: Not reliant on institutions whose existence depends on global conformity
-- ✅ **Ground-truth based**: Derived from action and structural access, not sentiment
-- ✅ **Future-oriented**: Captures how people *behave toward tomorrow*, not just what laws exist today
-- ✅ **Lean & reproducible**: No complex dependencies, no ideological gatekeeping
-
----
-
-## 📁 Example Use Cases
-
-- Classify 20–30 countries for a policy research report  
-- Generate regional democratic risk maps based on behavioral data  
-- Compare elite-imposed vs. people-driven democratic systems  
-- Anticipate instability based on divergence between structure and popular perception
+- Define a flexible, low-footprint schema for collecting civic structure indicators
+- Enable scoring of countries based on real-world events and system signals, not political alignment
+- Support modular input pipelines (manual, scripted, or future NLP/ML)
+- Provide auditability of all computed values
+- Allow end-users to modify weights, rules, or schema for alternative simulations
 
 ---
 
-## 🛤️ Extensibility
+## How It Works
 
-This project is built for expansion:
-- Add temporal dimension to track democratic trajectory
-- Visualize regime drift or recovery based on score shifts
-- Simulate downstream effects of structural changes
+1. **Input Normalization**  
+   Users enter structured data in JSON or CSV format, corresponding to observable civic indicators.
+
+2. **Scoring Engine**  
+   Inputs are mapped to a 0–10 scale based on defined logic. Each field corresponds to a structural attribute.
+
+3. **Aggregation**  
+   Weighted or equal-weighted aggregation is performed. Final outputs are available in CLI or structured JSON form.
+
+4. **Optionally**  
+   A lightweight inference model can be trained to project missing values from partial data. This is experimental and traceable.
 
 ---
 
-## 🧾 Credits & Licensing
+## Input Schema (Overview)
 
-This tool is developed as an open framework for structurally measuring legitimacy without ideological dependencies. It is intended for public use, education, and policy refinement.
+Each country's evaluation is based on explicitly scored indicators across multiple domains.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `Country` | `str` | Country name |
+| `Leadership_Turnover_Score` | `number` (0–10) | Score measuring leadership turnover and transition |
+| `Local_Governance_Score` | `number` (0–10) | Score measuring effectiveness of local governance |
+| `Policy_Responsiveness_Score` | `number` (0–10) | Score measuring how responsive policies are to public needs |
+| `Language_Alignment_Score` | `number` (0–10) | Score measuring alignment between official and public language |
+| `Participation_Accessibility_Score` | `number` (0–10) | Score measuring accessibility of civic participation |
+| `Civilian_Control_Score` | `number` (0–10) | Score measuring civilian control over military and security forces |
+| `Structural_Advocacy_and_Prosperity_Score` | `number` (0–10) | Score measuring structural support for advocacy and prosperity |
+| `Healthcare_Access_Score` | `number` (0–10) | Score measuring access to healthcare |
+| `Education_Completion_Score` | `number` (0–10) | Score measuring education completion rates |
+| `Food_Sovereignty_Score` | `number` (0–10) | Score measuring food sovereignty and security |
+| `Migration_Freedom_Score` | `number` (0–10) | Score measuring freedom of migration |
+| `Agency_Projection_Score` | `number` (0–10) | Score measuring individual agency projection |
+| `Pathway_to_Influence_Score` | `number` (0–10) | Score measuring pathways to influence in society |
+| `Collective_Future_Confidence_Score` | `number` (0–10) | Score measuring collective confidence in the future |
+| `System_Adaptability_Score` | `number` (0–10) | Score measuring adaptability of political and social systems |
+| `Collective_Momentum_Score` | `number` (0–10) | Score measuring collective momentum for change |
+| `Life_Investment_Score` | `number` (0–10) | Score measuring investment in life and future |
+| `Exit_vs_Voice_Behavior_Score` | `number` (0–10) | Score measuring tendency to voice concerns vs exit the system |
+| `Narrative_Action_Alignment_Score` | `number` (0–10) | Score measuring alignment between narrative and action |
+| `Democracy_Status` | `number` (0–10) | Overall democracy status score |
+
+> Full schema, including metadata fields, can be found in `schema/schema.json`.
 
 ---
+
+## Output
+
+The program outputs:
+- Raw normalized field values
+- Weighted total score (if enabled)
+- Breakdown of field impact (per-field contributions, top/bottom impact, missing/default warnings)
+- Structured report (`JSON`, optionally `CSV`)
+- CLI printout with diagnostic interpretation
+- (If enabled) Imputed values are flagged in the output
+
+---
+
+## Technical Stack
+
+- Python 3.11+
+- Required dependencies: `pandas`, `numpy`, `scikit-learn`, `pycountry`
+- Fully compatible with headless environments or lightweight deployment
+
+---
+
+## Sample Workflow
+
+```bash
+# Run the main program to process data and generate complete dataset
+python main.py
+
+# Enable experimental inference model for missing value imputation
+CIVIC_IMPUTE=1 python main.py
+
+# Train a simple model (experimental feature, standalone)
+python model.py --train data/ --fields Agency_Projection_Score Collective_Future_Confidence_Score

@@ -1,270 +1,355 @@
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
-import os
-import sys
-
-# Path: main.py
-from sklearn.model_selection import train_test_split
+import json
+from sklearn.model_selection import train_test_split, cross_val_score, GridSearchCV, RandomizedSearchCV
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import confusion_matrix, accuracy_score, classification_report
-from sklearn.model_selection import cross_val_score
-from sklearn.model_selection import GridSearchCV
-from sklearn.model_selection import RandomizedSearchCV
+from sklearn.ensemble import RandomForestClassifier
+import pycountry
+import os
+import importlib
 
+"""
+Civic Horizon Project - main.py
 
+This application evaluates the sustainability of democracy within nation-states using structured, behavioral,
+and future-oriented metrics. It classifies countries as 'Democratic' or 'Non-Democratic' based on their
+ability to empower citizens to shape the future.
 
-# create a function to load the data from the csv files "electoral-democracy-index.csv", "gdp per capita.csv", "gini-index.csv", "military_rankings.csv"
-def load_data():
-    data = pd.read_csv("electoral-democracy-index.csv")
-    data1 = pd.read_csv("gdp per capita.csv")
-    data2 = pd.read_csv("gini-index.csv")
-    data3 = pd.read_csv("military_rankings.csv")
-    return data, data1, data2, data3
+The framework includes 5 domains:
+1. Power Responsiveness
+2. Sociopolitical Coherence
+3. Material Well-being & Agency
+4. Future Perception
+5. Behavioral Future Engagement
 
-# create a function to merge the data from the csv files "electoral-democracy-index.csv", "gdp per capita.csv", "gini-index.csv", "military_rankings.csv"
-def merge_data(data, data1, data2, data3):
-    data = pd.merge(data, data1, on='Country')
-    data = pd.merge(data, data2, on='Country')
-    data = pd.merge(data, data3, on='Country')
-    return data
+Each feature is scored from 0 to 10 based on factual, ground-truth evidence. The model avoids
+ideological bias and focuses on structural legitimacy and public behavior.
+"""
 
-# create a function to clean the data
-def clean_data(data):
-    data = data.dropna()
-    data = data.drop(['Country Code', 'Year'], axis=1)
-    return data
+# Modular input pipeline registry
+data_loaders = {}
 
-# create a function to split the data into training and testing sets
-def split_data(data):
-    X = data.drop(['Status'], axis=1)
-    y = data['Status']
+def register_loader(ext):
+    """Decorator to register a data loader for a given file extension (e.g., '.csv')."""
+    def decorator(func):
+        data_loaders[ext] = func
+        return func
+    return decorator
+
+@register_loader('.csv')
+def load_csv(filepath, columns):
+    df = pd.read_csv(filepath)
+    for col in columns:
+        if col not in df.columns:
+            df[col] = None
+    df = df[columns]
+    return df
+
+@register_loader('.json')
+def load_json(filepath, columns):
+    with open(filepath, 'r') as f:
+        data = json.load(f)
+    if isinstance(data, dict):
+        data = list(data.values())
+    df = pd.DataFrame(data)
+    for col in columns:
+        if col not in df.columns:
+            df[col] = None
+    df = df[columns]
+    return df
+
+# Placeholder for future input modules (e.g., API, NLP, etc.)
+# @register_loader('.api')
+# def load_api(filepath, columns):
+#     # Implement API data loading here
+#     pass
+
+# Main data loading function using the modular registry
+def load_structural_democracy_data(filepath, schema_path="schema/schema.json"):
+    """
+    Modular data loader. Selects the appropriate loader based on file extension.
+    To add a new loader, use the @register_loader decorator above.
+    """
+    with open(schema_path, 'r') as schema_file:
+        schema = json.load(schema_file)
+    columns = list(schema["properties"].keys())
+    ext = os.path.splitext(filepath)[-1].lower()
+    if ext in data_loaders:
+        df = data_loaders[ext](filepath, columns)
+    else:
+        raise ValueError(f"Unsupported file type: {ext}")
+    # Warn about missing or extra fields
+    missing = [col for col in columns if col not in df.columns]
+    extra = [col for col in df.columns if col not in columns]
+    if missing:
+        print(f"WARNING: The following schema fields are missing from input data: {missing}")
+    if extra:
+        print(f"WARNING: The following fields are in input data but not in schema: {extra}")
+    return df
+
+# Get a comprehensive list of all countries in the world
+def get_all_countries():
+    return [country.name for country in pycountry.countries]
+
+# Load weights from a JSON file if present, otherwise use equal weights
+def load_weights(schema_path="schema/schema.json", weights_path="weights.json"):
+    # Get indicator fields from schema
+    with open(schema_path, 'r') as schema_file:
+        schema = json.load(schema_file)
+    indicator_fields = [
+        k for k in schema["properties"].keys()
+        if k not in ["Country", "Democracy_Status"]
+    ]
+    # Try to load weights.json
+    if os.path.exists(weights_path):
+        with open(weights_path, 'r') as f:
+            weights = json.load(f)
+        # Only keep weights for indicator fields
+        weights = {k: float(weights.get(k, 1.0)) for k in indicator_fields}
+    else:
+        # Equal weights
+        weights = {k: 1.0 for k in indicator_fields}
+    # Normalize weights to sum to 1
+    total = sum(weights.values())
+    if total > 0:
+        weights = {k: v / total for k, v in weights.items()}
+    return weights
+
+# Compute Democracy_Status as weighted sum of indicator fields
+def compute_democracy_status(row, weights):
+    score = 0.0
+    for field, weight in weights.items():
+        value = row.get(field, 0)
+        if value is None:
+            value = 0
+        score += value * weight
+    return score
+
+# Update prepare_data to compute Democracy_Status from indicators
+def prepare_data(df, weights):
+    all_countries = get_all_countries()
+    existing_countries = set(df['Country'].tolist())
+    missing_countries = [country for country in all_countries if country not in existing_countries]
+    default_score = 0
+    if missing_countries:
+        feature_columns = [col for col in df.columns if col not in ['Country', 'Democracy_Status']]
+        missing_data = []
+        for country in missing_countries:
+            country_data = {'Country': country}
+            for col in feature_columns:
+                country_data[col] = default_score
+            # Democracy_Status will be computed below
+            missing_data.append(country_data)
+        missing_df = pd.DataFrame(missing_data)
+        df = pd.concat([df, missing_df], ignore_index=True)
+    # Compute Democracy_Status for all rows
+    indicator_fields = list(weights.keys())
+    df['Democracy_Status'] = df.apply(lambda row: compute_democracy_status(row, weights), axis=1)
+    df_complete = df.copy()
+    df_complete['Democracy_Category'] = df_complete['Democracy_Status'].apply(
+        lambda x: 'Democratic' if x >= 5.0 else 'Non-Democratic'
+    )
+    df = df.dropna()
+    X = df[indicator_fields]
+    df['Democracy_Category'] = df['Democracy_Status'].apply(lambda x: 'Democratic' if x >= 5.0 else 'Non-Democratic')
+    y = df['Democracy_Category']
+    return X, y, df_complete
+
+# Split and scale dataset
+
+def split_and_scale(X, y):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
     scaler = StandardScaler()
     X_train = scaler.fit_transform(X_train)
     X_test = scaler.transform(X_test)
     return X_train, X_test, y_train, y_test
 
-# create a function to train the model
+# Train model
+
 def train_model(X_train, y_train):
-    from sklearn.ensemble import RandomForestClassifier
-    classifier = RandomForestClassifier(n_estimators=100, criterion='entropy', random_state=42)
-    classifier.fit(X_train, y_train)
-    return classifier
+    clf = RandomForestClassifier(n_estimators=100, criterion='entropy', random_state=42)
+    clf.fit(X_train, y_train)
+    return clf
 
-# create a function to predict the model
-def predict_model(classifier, X_test):
-    y_pred = classifier.predict(X_test)
-    return y_pred
+# Predict outcomes
 
+def predict(clf, X_test):
+    return clf.predict(X_test)
 
-# create a function to evaluate the model
-def evaluate_model(y_test, y_pred):
-    cm = confusion_matrix(y_test, y_pred)
-    print(cm)
-    print(accuracy_score(y_test, y_pred))
+# Evaluation: Confusion Matrix
+
+def print_confusion_matrix(cm, labels):
+    print("\nConfusion Matrix:")
+
+    # Handle the case where there's only one class
+    if len(labels) == 1:
+        print(f"Only one class ({labels[0]}) found in the test data.")
+        print(f"Correct predictions: {cm[0][0]}")
+        return
+
+    # Check the shape of the confusion matrix
+    if cm.shape == (1, 1):
+        print(f"Only one class found in predictions.")
+        print(f"Correct predictions: {cm[0][0]}")
+        return
+
+    # Normal case with multiple classes and a 2x2 confusion matrix
+    print(f"{'':>12} Predicted {labels[0]}   Predicted {labels[1]}")
+    print(f"Actual {labels[0]:>8} {cm[0][0]:>10} {cm[0][1]:>18}")
+    print(f"Actual {labels[1]:>8} {cm[1][0]:>10} {cm[1][1]:>18}")
+
+# Evaluation: Accuracy and Report
+
+def print_evaluation(y_test, y_pred):
+    print("\nClassification Evaluation:")
+    print(f"Accuracy: {accuracy_score(y_test, y_pred) * 100:.2f}%")
+    print("\nClassification Report:")
     print(classification_report(y_test, y_pred))
-    return cm
 
-# create a function to perform k-fold cross validation
-def k_fold_cross_validation(classifier, X_train, y_train):
-    accuracies = cross_val_score(estimator=classifier, X=X_train, y=y_train, cv=10)
-    print("Accuracy: {:.2f} %".format(accuracies.mean()*100))
-    print("Standard Deviation: {:.2f} %".format(accuracies.std()*100))
-    return accuracies
+# Cross Validation
 
-# create a function to perform grid search
-def grid_search(classifier, X_train, y_train): 
-    parameters = [{'n_estimators': [10, 100, 1000], 'criterion': ['entropy', 'gini']}]
-    grid_search = GridSearchCV(estimator=classifier, param_grid=parameters, scoring='accuracy', cv=10, n_jobs=-1)
-    grid_search = grid_search.fit(X_train, y_train)
-    best_accuracy = grid_search.best_score_
-    best_parameters = grid_search.best_params_
-    print("Best Accuracy: {:.2f} %".format(best_accuracy*100))
-    print("Best Parameters:", best_parameters)
-    return best_accuracy, best_parameters
+def print_cross_validation_results(accuracies):
+    print("\nK-Fold Cross Validation:")
+    print(f"Average Accuracy: {accuracies.mean()*100:.2f}%")
+    print(f"Standard Deviation: {accuracies.std()*100:.2f}%")
 
-# create a function to perform random search
-def random_search(classifier, X_train, y_train):
-    parameters = [{'n_estimators': [10, 100, 1000], 'criterion': ['entropy', 'gini']}]
-    random_search = RandomizedSearchCV(estimator=classifier, param_distributions=parameters, scoring='accuracy', cv=10, n_jobs=-1)
-    random_search = random_search.fit(X_train, y_train)
-    best_accuracy = random_search.best_score_
-    best_parameters = random_search.best_params_
-    print("Best Accuracy: {:.2f} %".format(best_accuracy*100))
-    print("Best Parameters:", best_parameters)
-    return best_accuracy, best_parameters
+# Grid Search for Hyperparameter Tuning
 
-# create a function to plot the confusion matrix
-def plot_confusion_matrix(cm):
-    plt.figure(figsize=(24, 16))
-    sns.heatmap(cm, annot=True, cmap='Blues', fmt='g')
-    plt.title('Confusion Matrix')
-    plt.xlabel('Predicted')
-    plt.ylabel('Truth')
-    plt.show()
+def print_grid_search_results(best_accuracy, best_params):
+    print("\nGrid Search Results:")
+    print(f"Best Accuracy: {best_accuracy * 100:.2f}%")
+    print(f"Best Parameters: {best_params}")
 
-# create a function to plot the accuracy
-def plot_accuracy(accuracies):
-    plt.figure(figsize=(24, 16))
-    sns.distplot(accuracies)
-    plt.title('Accuracy')
-    plt.xlabel('Accuracy')
-    plt.ylabel('Frequency')
-    plt.show()
+# Random Search for Exploration
 
-# create a function to plot the classification report
-def plot_classification_report(classification_report):
-    plt.figure(figsize=(24, 16))
-    sns.heatmap(classification_report, annot=True, cmap='Blues', fmt='g')
-    plt.title('Classification Report')
-    plt.xlabel('Predicted')
-    plt.ylabel('Truth')
-    plt.show()
+def print_random_search_results(best_accuracy, best_params):
+    print("\nRandom Search Results:")
+    print(f"Best Accuracy: {best_accuracy * 100:.2f}%")
+    print(f"Best Parameters: {best_params}")
 
-# create a function to plot the ROC curve
-def plot_roc_curve(fpr, tpr, auc):
-    plt.figure(figsize=(24, 16))
-    plt.plot(fpr, tpr, color='red', label='ROC (AUC = %0.2f)' % auc)
-    plt.plot([0, 1], [0, 1], color='blue', linestyle='--')
-    plt.title('ROC Curve')
-    plt.xlabel('False Positive Rate')
-    plt.ylabel('True Positive Rate')
-    plt.legend(loc='lower right')
-    plt.show()
+# Execute grid search
 
-# create a function to plot the precision-recall curve
-def plot_precision_recall_curve(precision, recall, average_precision):
-    plt.figure(figsize=(24, 16))
-    plt.plot(recall, precision, color='red', label='Precision-Recall (AP = %0.2f)' % average_precision)
-    plt.title('Precision-Recall Curve')
-    plt.xlabel('Recall')
-    plt.ylabel('Precision')
-    plt.legend(loc='lower right')
-    plt.show()
+def run_grid_search(clf, X_train, y_train):
+    params = {'n_estimators': [10, 100, 1000], 'criterion': ['entropy', 'gini']}
+    search = GridSearchCV(clf, params, scoring='accuracy', cv=2, n_jobs=-1)
+    search.fit(X_train, y_train)
+    return search.best_score_, search.best_params_
 
-# create a function to plot the learning curve
-def plot_learning_curve(classifier, X_train, y_train):
-    train_sizes, train_scores, test_scores = learning_curve(estimator=classifier, X=X_train, y=y_train, cv=10, n_jobs=-1, train_sizes=np.linspace(0.01, 1.0, 50))
-    train_mean = np.mean(train_scores, axis=1)
-    train_std = np.std(train_scores, axis=1)
-    test_mean = np.mean(test_scores, axis=1)
-    test_std = np.std(test_scores, axis=1)
-    plt.figure(figsize=(24, 16))
-    plt.plot(train_sizes, train_mean, color='red', marker='o', markersize=5, label='Training Accuracy')
-    plt.fill_between(train_sizes, train_mean + train_std, train_mean - train_std, alpha=0.15, color='red')
-    plt.plot(train_sizes, test_mean, color='blue', marker='o', markersize=5, label='Validation Accuracy')
-    plt.fill_between(train_sizes, test_mean + test_std, test_mean - test_std, alpha=0.15, color='blue')
-    plt.title('Learning Curve')
-    plt.xlabel('Training Examples')
-    plt.ylabel('Accuracy')
-    plt.legend(loc='lower right')
-    plt.show()
+# Execute random search
 
-# create a function to plot the validation curve
-def plot_validation_curve(classifier, X_train, y_train):
-    param_range = np.arange(1, 100, 1)
-    train_scores, test_scores = validation_curve(estimator=classifier, X=X_train, y=y_train, param_name='n_estimators', param_range=param_range, cv=10, n_jobs=-1)
-    train_mean = np.mean(train_scores, axis=1)
-    train_std = np.std(train_scores, axis=1)
-    test_mean = np.mean(test_scores, axis=1)
-    test_std = np.std(test_scores, axis=1)
-    plt.figure(figsize=(24, 16))
-    plt.plot(param_range, train_mean, color='red', marker='o', markersize=5, label='Training Accuracy')
-    plt.fill_between(param_range, train_mean + train_std, train_mean - train_std, alpha=0.15, color='red')
-    plt.plot(param_range, test_mean, color='blue', marker='o', markersize=5, label='Validation Accuracy')
-    plt.fill_between(param_range, test_mean + test_std, test_mean - test_std, alpha=0.15, color='blue')
-    plt.title('Validation Curve')
-    plt.xlabel('Number of Estimators')
-    plt.ylabel('Accuracy')
-    plt.legend(loc='lower right')
-    plt.show()
+def run_random_search(clf, X_train, y_train):
+    params = {'n_estimators': [10, 100, 1000], 'criterion': ['entropy', 'gini']}
+    # Total parameter space is 3 × 2 = 6, so set n_iter to 6 or less
+    search = RandomizedSearchCV(clf, params, scoring='accuracy', cv=2, n_jobs=-1, n_iter=6)
+    search.fit(X_train, y_train)
+    return search.best_score_, search.best_params_
 
-# create a function to plot the decision boundary
-def plot_decision_boundary(classifier, X_train, y_train):
-    X_set, y_set = X_train, y_train
-    X1, X2 = np.meshgrid(np.arange(start=X_set[:, 0].min() - 1, stop=X_set[:, 0].max() + 1, step=0.01), 
-                         np.arange(start=X_set[:, 1].min() - 1, stop=X_set[:, 1].max() + 1, step=0.01))
-    plt.figure(figsize=(24, 16))
-    plt.contourf(X1, X2, classifier.predict(np.array([X1.ravel(), X2.ravel()]).T).reshape(X1.shape), 
-                 alpha=0.75, cmap=ListedColormap(('red', 'blue')))
-    plt.xlim(X1.min(), X1.max())
-    plt.ylim(X2.min(), X2.max())
-    for i, j in enumerate(np.unique(y_set)):
-        plt.scatter(X_set[y_set==j, 0], X_set[y_set==j, 1], c=ListedColormap(('red', 'blue'))(i), label=j)
-    plt.title('Decision Boundary')
-    plt.xlabel('X1')
-    plt.ylabel('X2')
-    plt.legend()
-    plt.show()
+# Helper to write DataFrame to JSON, including field impact breakdown
+def write_json(df, filepath, weights=None):
+    """
+    Write the DataFrame to JSON. If weights are provided, include a 'field_contributions' breakdown for each country.
+    """
+    records = df.to_dict(orient="records")
+    if weights is not None:
+        indicator_fields = list(weights.keys())
+        for rec in records:
+            contributions = {}
+            for field in indicator_fields:
+                value = rec.get(field, 0)
+                w = weights[field]
+                contrib = (value if value is not None else 0) * w
+                contributions[field] = {
+                    "value": value,
+                    "weight": w,
+                    "contribution": contrib
+                }
+            rec["field_contributions"] = contributions
+    with open(filepath, 'w') as f:
+        json.dump(records, f, indent=2)
 
+# Print breakdown of field contributions for each country, with diagnostics
+def print_field_contributions(df, weights, n=5):
+    """
+    Print a breakdown of field contributions for the first n countries, including which field had the highest/lowest impact and any missing/default values.
+    """
+    print("\nSample field contribution breakdown (first {} countries):".format(n))
+    indicator_fields = list(weights.keys())
+    for idx, row in df.head(n).iterrows():
+        print(f"\nCountry: {row['Country']}")
+        total = row['Democracy_Status']
+        contribs = {}
+        missing = []
+        default = []
+        for field in indicator_fields:
+            value = row[field]
+            w = weights[field]
+            contrib = (value if value is not None else 0) * w
+            contribs[field] = contrib
+            if value is None:
+                missing.append(field)
+            elif value == 0:
+                default.append(field)
+            print(f"  {field}: {value} × {w:.3f} = {contrib:.3f}")
+        print(f"  Total Democracy_Status: {total:.3f}")
+        # Diagnostics
+        if contribs:
+            max_field = max(contribs, key=contribs.get)
+            min_field = min(contribs, key=contribs.get)
+            print(f"  Highest impact: {max_field} ({contribs[max_field]:.3f})")
+            print(f"  Lowest impact: {min_field} ({contribs[min_field]:.3f})")
+        if missing:
+            print(f"  WARNING: Missing values for: {missing}")
+        if default:
+            print(f"  Note: Default (0) values for: {default}")
 
-# print the accuracy
-print('Accuracy: %.2f%%' % (accuracy * 100))
+# Main application logic
 
-# print the confusion matrix
-print('Confusion Matrix:')
-print(confusion_matrix)
+def main():
+    """
+    Main pipeline. Set CIVIC_IMPUTE=1 to enable experimental inference-based imputation of missing values.
+    """
+    print("\n--- Civic Horizon: Democracy Sustainability Classifier ---")
+    weights = load_weights()
+    input_file = os.environ.get("CIVIC_INPUT", "seed_structural_democracy_data.csv")
+    df = load_structural_democracy_data(input_file)
 
-# print the classification report
-print('Classification Report:')
-print(classification_report)
+    # Optional: Experimental inference model for missing value imputation
+    if os.environ.get("CIVIC_IMPUTE", "0") == "1":
+        print("\n[EXPERIMENTAL] Imputing missing values using inference model...")
+        model_mod = importlib.import_module("model")
+        # Use all indicator fields as targets
+        indicator_fields = list(weights.keys())
+        # Train on available data (drop rows with all indicators missing)
+        train_data = df.dropna(subset=indicator_fields, how='all')
+        models = model_mod.train_inference_model(train_data.to_dict(orient="records"), indicator_fields)
+        if models:
+            df = model_mod.impute_missing_values(df, models)
+            print("Imputation complete. Imputed values are marked with *_imputed columns.")
+        else:
+            print("Imputation skipped: could not train models.")
 
-# plot the confusion matrix
-plot_confusion_matrix(confusion_matrix)
+    X, y, df_complete = prepare_data(df, weights)
+    X_train, X_test, y_train, y_test = split_and_scale(X, y)
+    clf = train_model(X_train, y_train)
+    y_pred = predict(clf, X_test)
+    cm = confusion_matrix(y_test, y_pred)
+    print_confusion_matrix(cm, clf.classes_)
+    print_evaluation(y_test, y_pred)
+    accuracies = cross_val_score(clf, X_train, y_train, cv=2)
+    print_cross_validation_results(accuracies)
+    best_acc_gs, best_params_gs = run_grid_search(clf, X_train, y_train)
+    print_grid_search_results(best_acc_gs, best_params_gs)
+    best_acc_rs, best_params_rs = run_random_search(clf, X_train, y_train)
+    print_random_search_results(best_acc_rs, best_params_rs)
+    output_csv = "complete_democracy_data.csv"
+    output_json = "complete_democracy_data.json"
+    df_complete.to_csv(output_csv, index=False)
+    write_json(df_complete, output_json, weights=weights)
+    print(f"\nComplete dataset with all countries saved to {output_csv} and {output_json}")
+    print(f"Total countries in the output: {len(df_complete)}")
+    print(f"Countries with default scores: {len(df_complete) - len(df)}")
+    print_field_contributions(df_complete, weights, n=5)
 
-# plot the classification report
-plot_classification_report(classification_report)
-
-# plot the ROC curve
-plot_roc_curve(fpr, tpr, auc)
-
-# plot the precision-recall curve
-plot_precision_recall_curve(precision, recall, average_precision)
-
-# plot the learning curve
-plot_learning_curve(classifier, X_train, y_train)
-
-# plot the validation curve
-plot_validation_curve(classifier, X_train, y_train)
-
-# plot the decision boundary
-plot_decision_boundary(classifier, X_train, y_train)
-
-# print the best parameters
-print('Best Parameters:')
-print(grid_search.best_params_)
-
-# print the best score
-print('Best Score: %.2f%%' % (grid_search.best_score_ * 100))
-
-# print the best estimator
-print('Best Estimator:')
-print(grid_search.best_estimator_)
-
-# print the best index
-print('Best Index:')
-print(grid_search.best_index_)
-
-
-
-#use the data to create a relationship matrix between the US and a nation
-# plot the relationship matrix
-plot_relationship_matrix(relationship_matrix)
-
-
-
-
- #use the data to adjust relationship of the rest of the nations based on the relationship matrix
-plot = plot_relationship_matrix(relationship_matrix)
-plot.show()
-
-
-
-
-
-
-
-
-
+if __name__ == "__main__":
+    main()

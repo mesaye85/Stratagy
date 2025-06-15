@@ -1,0 +1,286 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Democracy Metrics Schema",
+  "description": "Schema for evaluating the internal structure and functionality of political systems",
+  "type": "object",
+  "required": ["Country"],
+  "properties": {
+    "Country": {
+      "type": "string",
+      "description": "Country name"
+    },
+    "Leadership_Turnover_Score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 10,
+      "description": "Score measuring leadership turnover and transition"
+    },
+    "Leadership_Turnover_Score_definition": {
+      "type": "string",
+      "description": "Operational definition for Leadership_Turnover_Score"
+    },
+    "Leadership_Turnover_Score_source": {
+      "type": "string",
+      "description": "Data source for Leadership_Turnover_Score"
+    },
+    "Local_Governance_Score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 10,
+      "description": "Score measuring effectiveness of local governance"
+    },
+    "Local_Governance_Score_definition": {
+      "type": "string",
+      "description": "Operational definition for Local_Governance_Score"
+    },
+    "Local_Governance_Score_source": {
+      "type": "string",
+      "description": "Data source for Local_Governance_Score"
+    },
+    "Policy_Responsiveness_Score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 10,
+      "description": "Score measuring how responsive policies are to public needs"
+    },
+    "Policy_Responsiveness_Score_definition": {
+      "type": "string",
+      "description": "Operational definition for Policy_Responsiveness_Score"
+    },
+    "Policy_Responsiveness_Score_source": {
+      "type": "string",
+      "description": "Data source for Policy_Responsiveness_Score"
+    },
+    "Language_Alignment_Score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 10,
+      "description": "Score measuring alignment between official and public language"
+    },
+    "Language_Alignment_Score_definition": {
+      "type": "string",
+      "description": "Operational definition for Language_Alignment_Score"
+    },
+    "Language_Alignment_Score_source": {
+      "type": "string",
+      "description": "Data source for Language_Alignment_Score"
+    },
+    "Participation_Accessibility_Score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 10,
+      "description": "Score measuring accessibility of civic participation"
+    },
+    "Participation_Accessibility_Score_definition": {
+      "type": "string",
+      "description": "Operational definition for Participation_Accessibility_Score"
+    },
+    "Participation_Accessibility_Score_source": {
+      "type": "string",
+      "description": "Data source for Participation_Accessibility_Score"
+    },
+    "Civilian_Control_Score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 10,
+      "description": "Score measuring civilian control over military and security forces"
+    },
+    "Civilian_Control_Score_definition": {
+      "type": "string",
+      "description": "Operational definition for Civilian_Control_Score"
+    },
+    "Civilian_Control_Score_source": {
+      "type": "string",
+      "description": "Data source for Civilian_Control_Score"
+    },
+    "Structural_Advocacy_and_Prosperity_Score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 10,
+      "description": "Score measuring structural support for advocacy and prosperity"
+    },
+    "Structural_Advocacy_and_Prosperity_Score_definition": {
+      "type": "string",
+      "description": "Operational definition for Structural_Advocacy_and_Prosperity_Score"
+    },
+    "Structural_Advocacy_and_Prosperity_Score_source": {
+      "type": "string",
+      "description": "Data source for Structural_Advocacy_and_Prosperity_Score"
+    },
+    "Healthcare_Access_Score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 10,
+      "description": "Score measuring access to healthcare"
+    },
+    "Healthcare_Access_Score_definition": {
+      "type": "string",
+      "description": "Operational definition for Healthcare_Access_Score"
+    },
+    "Healthcare_Access_Score_source": {
+      "type": "string",
+      "description": "Data source for Healthcare_Access_Score"
+    },
+    "Education_Completion_Score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 10,
+      "description": "Score measuring education completion rates"
+    },
+    "Education_Completion_Score_definition": {
+      "type": "string",
+      "description": "Operational definition for Education_Completion_Score"
+    },
+    "Education_Completion_Score_source": {
+      "type": "string",
+      "description": "Data source for Education_Completion_Score"
+    },
+    "Food_Sovereignty_Score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 10,
+      "description": "Score measuring food sovereignty and security"
+    },
+    "Food_Sovereignty_Score_definition": {
+      "type": "string",
+      "description": "Operational definition for Food_Sovereignty_Score"
+    },
+    "Food_Sovereignty_Score_source": {
+      "type": "string",
+      "description": "Data source for Food_Sovereignty_Score"
+    },
+    "Migration_Freedom_Score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 10,
+      "description": "Score measuring freedom of migration"
+    },
+    "Migration_Freedom_Score_definition": {
+      "type": "string",
+      "description": "Operational definition for Migration_Freedom_Score"
+    },
+    "Migration_Freedom_Score_source": {
+      "type": "string",
+      "description": "Data source for Migration_Freedom_Score"
+    },
+    "Agency_Projection_Score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 10,
+      "description": "Score measuring individual agency projection"
+    },
+    "Agency_Projection_Score_definition": {
+      "type": "string",
+      "description": "Operational definition for Agency_Projection_Score"
+    },
+    "Agency_Projection_Score_source": {
+      "type": "string",
+      "description": "Data source for Agency_Projection_Score"
+    },
+    "Pathway_to_Influence_Score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 10,
+      "description": "Score measuring pathways to influence in society"
+    },
+    "Pathway_to_Influence_Score_definition": {
+      "type": "string",
+      "description": "Operational definition for Pathway_to_Influence_Score"
+    },
+    "Pathway_to_Influence_Score_source": {
+      "type": "string",
+      "description": "Data source for Pathway_to_Influence_Score"
+    },
+    "Collective_Future_Confidence_Score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 10,
+      "description": "Score measuring collective confidence in the future"
+    },
+    "Collective_Future_Confidence_Score_definition": {
+      "type": "string",
+      "description": "Operational definition for Collective_Future_Confidence_Score"
+    },
+    "Collective_Future_Confidence_Score_source": {
+      "type": "string",
+      "description": "Data source for Collective_Future_Confidence_Score"
+    },
+    "System_Adaptability_Score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 10,
+      "description": "Score measuring adaptability of political and social systems"
+    },
+    "System_Adaptability_Score_definition": {
+      "type": "string",
+      "description": "Operational definition for System_Adaptability_Score"
+    },
+    "System_Adaptability_Score_source": {
+      "type": "string",
+      "description": "Data source for System_Adaptability_Score"
+    },
+    "Collective_Momentum_Score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 10,
+      "description": "Score measuring collective momentum for change"
+    },
+    "Collective_Momentum_Score_definition": {
+      "type": "string",
+      "description": "Operational definition for Collective_Momentum_Score"
+    },
+    "Collective_Momentum_Score_source": {
+      "type": "string",
+      "description": "Data source for Collective_Momentum_Score"
+    },
+    "Life_Investment_Score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 10,
+      "description": "Score measuring investment in life and future"
+    },
+    "Life_Investment_Score_definition": {
+      "type": "string",
+      "description": "Operational definition for Life_Investment_Score"
+    },
+    "Life_Investment_Score_source": {
+      "type": "string",
+      "description": "Data source for Life_Investment_Score"
+    },
+    "Exit_vs_Voice_Behavior_Score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 10,
+      "description": "Score measuring tendency to voice concerns vs exit the system"
+    },
+    "Exit_vs_Voice_Behavior_Score_definition": {
+      "type": "string",
+      "description": "Operational definition for Exit_vs_Voice_Behavior_Score"
+    },
+    "Exit_vs_Voice_Behavior_Score_source": {
+      "type": "string",
+      "description": "Data source for Exit_vs_Voice_Behavior_Score"
+    },
+    "Narrative_Action_Alignment_Score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 10,
+      "description": "Score measuring alignment between narrative and action"
+    },
+    "Narrative_Action_Alignment_Score_definition": {
+      "type": "string",
+      "description": "Operational definition for Narrative_Action_Alignment_Score"
+    },
+    "Narrative_Action_Alignment_Score_source": {
+      "type": "string",
+      "description": "Data source for Narrative_Action_Alignment_Score"
+    },
+    "Democracy_Status": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 10,
+      "description": "Overall democracy status score"
+    }
+  },
+  "additionalProperties": false
+}
